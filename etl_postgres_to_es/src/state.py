@@ -12,12 +12,12 @@ logger = logging.getLogger(__name__)
 class BaseStorage:
     @abc.abstractmethod
     def save_state(self, state: dict) -> None:
-        """Сохранить состояние в постоянное хранилище"""
+        """Save state to storage"""
         pass
 
     @abc.abstractmethod
     def retrieve_state(self) -> dict:
-        """Загрузить состояние локально из постоянного хранилища"""
+        """Retrieve state from storage"""
         pass
 
 
@@ -106,7 +106,9 @@ class StateES(State):
         """
         Cache stored as a tuple of entities ids.
         """
-        entities = self.get_state(f"{entity_name}_synced_for_{index_name}")
+        cache_key = f"{entity_name}_synced_for_{index_name}"
+        self.cache_keys.add(cache_key)
+        entities = self.get_state(cache_key)
         if entities is None:
             return []
 
@@ -116,7 +118,6 @@ class StateES(State):
         self.set_state(f"last_{entity_name}_synced_at_for_{index_name}", str(value))
 
     def add_entity_synced(self, entity_name: str, index_name: str, entity_ids: List[str]):
-        self.set_state(
-            f"{entity_name}_synced_for_{index_name}",
-            self.get_synced_entities(entity_name, index_name) + entity_ids
-        )
+        cache_key = f"{entity_name}_synced_for_{index_name}"
+        self.cache_keys.add(cache_key)
+        self.set_state(cache_key, self.get_synced_entities(entity_name, index_name) + entity_ids)
