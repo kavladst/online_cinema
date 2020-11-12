@@ -1,0 +1,7 @@
+# Virtual enviroments
+venv
+env
+
+# Project exclude paths
+.idea
+__pycache__
