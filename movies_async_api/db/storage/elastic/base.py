@@ -13,44 +13,13 @@ from models.base import ModelType, SortOrder
 logger = logging.getLogger(__name__)
 
 
-class ESStorage:
+class BaseESStorageGetter(AbstractStorageGetter):
+    sort_order_values: Dict[Enum, str] = {SortOrder.ASC: "asc", SortOrder.DESC: "desc"}
+
     def __init__(self, elastic_driver: AsyncElasticsearch, elastic_index: str, model_cls: Any):
         self.driver: AsyncElasticsearch = elastic_driver
         self.elastic_index: str = elastic_index
         self.model_cls = model_cls
-
-    async def _perform_query(
-            self,
-            page: int,
-            per_page: int,
-            sort: list,
-            query: Optional[dict] = None
-    ) -> List[ModelType]:
-
-        query_body = {
-            "from": self._get_from(page, per_page),
-            "size": per_page,
-            "sort": sort
-        }
-        if query:
-            query_body['query'] = query
-
-        results = await self.driver.search(body=query_body, index=self.elastic_index)
-        data = results["hits"]["hits"]
-        logger.debug(f"Got {len(data)} entities")
-        return [self.model_cls(**entity["_source"]) for entity in data]
-
-    @staticmethod
-    def _get_from(page: int, per_page: int) -> int:
-        return (page - 1) * per_page
-
-
-class BaseESStorageGetter(AbstractStorageGetter, ESStorage):
-
-    sort_order_values: Dict[Enum, str] = {SortOrder.ASC: "asc", SortOrder.DESC: "desc"}
-
-    def __init__(self, elastic_driver: AsyncElasticsearch, elastic_index: str, model_cls: Any):
-        super().__init__(elastic_driver=elastic_driver, elastic_index=elastic_index, model_cls=model_cls)
 
     @property
     @abstractmethod
@@ -107,6 +76,27 @@ class BaseESStorageGetter(AbstractStorageGetter, ESStorage):
 
         return await self._perform_query(page=page, per_page=per_page, sort=sort, query=query)
 
+    async def _perform_query(
+            self,
+            page: int,
+            per_page: int,
+            sort: list,
+            query: Optional[dict] = None
+    ) -> List[ModelType]:
+
+        query_body = {
+            "from": self._get_from(page, per_page),
+            "size": per_page,
+            "sort": sort
+        }
+        if query:
+            query_body['query'] = query
+
+        results = await self.driver.search(body=query_body, index=self.elastic_index)
+        data = results["hits"]["hits"]
+        logger.debug(f"Got {len(data)} entities")
+        return [self.model_cls(**entity["_source"]) for entity in data]
+
     def _get_sort_list_from_sort_inputs(self, sort_by: Optional[Enum], sort_order: SortOrder) -> list:
         if sort_by is None:
             sort = []
@@ -116,3 +106,7 @@ class BaseESStorageGetter(AbstractStorageGetter, ESStorage):
             sort = [{sort_value: self.sort_order_values[sort_order]}]
 
         return sort
+
+    @staticmethod
+    def _get_from(page: int, per_page: int) -> int:
+        return (page - 1) * per_page
