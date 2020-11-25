@@ -1,4 +1,3 @@
-import time
 from typing import List, Dict, Tuple, Any
 
 import pytest
@@ -30,7 +29,6 @@ def test_get_film_details(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis
     indirect=True
 )
 def test_get_all_films(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     films = [_[1] for _ in es_data_setup]
     response = get_from_api("film/")
     assert response == get_expected_list_film(films)
@@ -44,7 +42,6 @@ def test_get_all_films(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_da
     indirect=True
 )
 def test_sort_films(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     films = [_[1] for _ in es_data_setup]
     for sort_field in ["imdb_rating", "title"]:
         for sort_order in ["asc", "desc"]:
@@ -60,7 +57,6 @@ def test_sort_films(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_
     indirect=True
 )
 def test_pagination_films(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     films = [_[1] for _ in es_data_setup]
     count_pages = 5
     page_size = len(films) // count_pages
@@ -92,7 +88,6 @@ def test_cached_film(redis_data_setup: List[Tuple[str, Any]]):
     indirect=True
 )
 def test_search_films(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     response = get_from_api("film/search", {"query": film_samples.FILM_SEARCH_QUERY_FOR_SAMPLES_1})
     assert response == film_samples.FILM_SEARCH_SAMPLES_EXPECTED_1
 
@@ -106,7 +101,6 @@ def test_search_films(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_dat
     indirect=True
 )
 def test_filter_films(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     films = [_[1] for _ in es_data_setup if _[0] == ES_MOVIES_INDEX_NAME]
     person_ids = [_[1]["id"] for _ in es_data_setup if _[0] == ES_PERSONS_INDEX_NAME]
     for person_id in person_ids:

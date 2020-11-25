@@ -1,4 +1,3 @@
-import time
 from typing import List, Dict, Tuple, Any
 
 import pytest
@@ -20,7 +19,6 @@ from tests.functional.utils.api_worker import get_from_api
 def test_get_genre_details(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
     films = [_[1] for _ in es_data_setup if _[0] == ES_MOVIES_INDEX_NAME]
     genre = es_data_setup[0][1]
-    time.sleep(1)
     response = get_from_api(f"genre/{genre['id']}/")
     assert response == get_expected_genre(genre, films)
 
@@ -33,7 +31,6 @@ def test_get_genre_details(es_data_setup: List[Tuple[str, Dict[str, Any]]], redi
     indirect=True
 )
 def test_get_all_genres(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     genres = [_[1] for _ in es_data_setup]
     response = get_from_api("genre/")
     assert response == get_expected_list_genre(genres)
@@ -47,7 +44,6 @@ def test_get_all_genres(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_d
     indirect=True
 )
 def test_pagination_genres(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     genres = [_[1] for _ in es_data_setup]
     count_pages = 5
     page_size = len(genres) // count_pages

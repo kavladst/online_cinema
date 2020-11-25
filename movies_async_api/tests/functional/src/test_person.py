@@ -1,4 +1,3 @@
-import time
 from typing import List, Dict, Tuple, Any
 
 import pytest
@@ -18,7 +17,6 @@ from tests.functional.utils.api_worker import get_from_api
     indirect=True
 )
 def test_get_person_details(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     person = es_data_setup[0][1]
     films = [_[1] for _ in es_data_setup if _[0] == ES_MOVIES_INDEX_NAME]
     response = get_from_api(f"person/{person['id']}/")
@@ -34,7 +32,6 @@ def test_get_person_details(es_data_setup: List[Tuple[str, Dict[str, Any]]], red
     indirect=True
 )
 def test_get_all_persons(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     persons = [_[1] for _ in es_data_setup if _[0] == ES_PERSONS_INDEX_NAME]
     response = get_from_api("person/")
     assert response == get_expected_list_person(persons)
@@ -48,7 +45,6 @@ def test_get_all_persons(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_
     indirect=True
 )
 def test_sort_persons(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     persons = [_[1] for _ in es_data_setup]
     for sort_order in ["asc", "desc"]:
         response = get_from_api("person/", {"sort_order": sort_order})
@@ -63,7 +59,6 @@ def test_sort_persons(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_dat
     indirect=True
 )
 def test_pagination_persons(es_data_setup: List[Tuple[str, Dict[str, Any]]], redis_data_setup):
-    time.sleep(1)
     persons = [_[1] for _ in es_data_setup]
     count_pages = 5
     page_size = len(persons) // count_pages

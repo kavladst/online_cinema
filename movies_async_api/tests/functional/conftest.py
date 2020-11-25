@@ -1,4 +1,5 @@
 import json
+import time
 from typing import List, Dict, Any, Tuple
 
 import pytest
@@ -46,6 +47,7 @@ def es_data_setup(es_client, redis_client, request) -> List[Tuple[str, Dict[str,
     es_documents: List[Tuple[str, Dict[str, Any]]] = getattr(request, "param", [])
     for es_index, es_body in es_documents:
         es_client.index(index=es_index, id=es_body["id"], body=es_body)
+    time.sleep(1)
     yield es_documents
     for es_index, es_body in es_documents:
         es_client.delete(es_index, es_body["id"])
