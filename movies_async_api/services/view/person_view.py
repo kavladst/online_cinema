@@ -12,7 +12,7 @@ from db.storage import get_person_storage
 from db.storage.abstract import AbstractStorageWithSearch
 from models.base import SortOrder
 from models.person import Person
-from .base import BaseView
+from .base import BaseView, service_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +45,7 @@ class PersonView(BaseView):
             logical_and_between_filters=logical_and_between_filters
         )
 
+    @service_backoff
     async def search_persons(
             self,
             search: str,
@@ -55,7 +56,7 @@ class PersonView(BaseView):
         persons = await self.cache.get_entities(page=page, per_page=per_page, search=search)
         if not persons:
             if not (persons := await self.storage.non_strict_search(search=search, page=page, per_page=per_page)):
-                logger.debug("No persons found matching search")
+                logger.debug('No persons found matching search')
                 return []
 
             await self.cache.put_entities(persons, page=page, per_page=per_page, search=search)

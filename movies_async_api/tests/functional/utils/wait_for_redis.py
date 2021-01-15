@@ -10,6 +10,6 @@ def ping_redis_until_connection(redis: Redis):
     redis.ping()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     redis = Redis(host=REDIS_HOST, port=REDIS_PORT)
     ping_redis_until_connection(redis)

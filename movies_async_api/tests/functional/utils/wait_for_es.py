@@ -10,6 +10,6 @@ def ping_es_until_connection(es: Elasticsearch):
         time.sleep(ES_CONNECT_TIMEOUT)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     es = Elasticsearch(host=ES_HOST, port=ES_PORT, verify_certs=True)
     ping_es_until_connection(es)

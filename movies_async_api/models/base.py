@@ -19,8 +19,8 @@ class BaseEntity(BaseModel):
 
 
 class SortOrder(Enum):
-    ASC = "asc"
-    DESC = "desc"
+    ASC = 'asc'
+    DESC = 'desc'
 
 
-ModelType = NewType("ModelType", BaseEntity)
+ModelType = NewType('ModelType', BaseEntity)

@@ -6,6 +6,10 @@ from uuid import UUID
 from models.base import ModelType, SortOrder
 
 
+class StorageBackoffException(Exception):
+    pass
+
+
 class AbstractStorageGetter(ABC):
 
     @abstractmethod

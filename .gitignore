@@ -5,4 +5,5 @@ env
 # Project exclude paths
 .idea
 .pytest_cache
+.dockerignore
 __pycache__

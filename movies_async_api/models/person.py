@@ -9,10 +9,10 @@ class Person(BaseEntity):
 
 @enum.unique
 class PossibleRoles(str, enum.Enum):
-    writer = "writer"
-    director = "director"
-    actor = "actor"
+    writer = 'writer'
+    director = 'director'
+    actor = 'actor'
 
 
 class SortBy(enum.Enum):
-    NAME = "full_name"
+    NAME = 'full_name'

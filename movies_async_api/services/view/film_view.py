@@ -12,7 +12,7 @@ from db.storage import get_film_storage
 from db.storage.abstract import AbstractStorageWithSearch
 from models.base import SortOrder
 from models.film import Film
-from .base import BaseView
+from .base import BaseView, service_backoff
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +44,7 @@ class FilmView(BaseView):
             logical_and_between_filters=logical_and_between_filters
         )
 
+    @service_backoff
     async def search_films(
             self,
             search: str,
@@ -54,7 +55,7 @@ class FilmView(BaseView):
         films = await self.cache.get_entities(page=page, per_page=per_page, search=search)
         if not films:
             if not (films := await self.storage.non_strict_search(search=search, page=page, per_page=per_page)):
-                logger.debug("No films found matching search")
+                logger.debug('No films found matching search')
                 return []
 
             await self.cache.put_entities(films, page=page, per_page=per_page, search=search)

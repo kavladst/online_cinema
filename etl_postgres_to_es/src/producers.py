@@ -117,7 +117,6 @@ def extract_updated_movies_due_to_entity_change(entity_name: str, target, state:
         logger.debug(f"All movies linked with persons updated after {date_start}, shutting down receiving coroutine")
 
 
-
 @backoff.on_exception(backoff.expo, psycopg2.errors.ConnectionException, max_time=CONFIG.PG_TIMEOUT_SEC)
 @coroutine
 def extract_updated_entities(index_name: str, target, state: StateES):

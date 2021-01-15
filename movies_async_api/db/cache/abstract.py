@@ -1,8 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Optional, List
+from uuid import UUID
 
 from models.base import ModelType
-from uuid import UUID
+
+
+class CacherBackoffException(Exception):
+    pass
 
 
 class AbstractEntityCacher(ABC):

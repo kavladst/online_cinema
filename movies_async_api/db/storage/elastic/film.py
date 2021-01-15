@@ -37,12 +37,12 @@ class FilmESStorageGetter(AbstractStorageWithSearch, BaseESStorageGetter):
             per_page: int
     ) -> List[Film]:
 
-        logger.debug(f"Performing non-strict search on films by search string {search}")
+        logger.debug(f'Performing non-strict search on films by search string {search}')
         query = {
-            "multi_match": {
-                "query": search,
-                "fuzziness": "auto",
-                "fields": ["title^5", "description^4", "genre^3", "actors_names^3", "writers_names^2", "director"]
+            'multi_match': {
+                'query': search,
+                'fuzziness': 'auto',
+                'fields': ['title^5', 'description^4', 'genre^3', 'actors_names^3', 'writers_names^2', 'director']
             }
         }
 

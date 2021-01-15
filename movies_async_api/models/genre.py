@@ -7,4 +7,4 @@ class Genre(BaseEntity):
 
 
 class SortBy(Enum):
-    NAME = "name"
+    NAME = 'name'

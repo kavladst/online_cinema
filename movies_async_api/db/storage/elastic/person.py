@@ -23,7 +23,7 @@ class PersonESStorageGetter(AbstractStorageWithSearch, BaseESStorageGetter):
 
     @property
     def sort_values(self) -> Dict[SortBy, str]:
-        return {SortBy.NAME: "full_name.raw"}
+        return {SortBy.NAME: 'full_name.raw'}
 
     async def non_strict_search(
             self,
@@ -32,12 +32,12 @@ class PersonESStorageGetter(AbstractStorageWithSearch, BaseESStorageGetter):
             per_page: int
     ) -> List[Person]:
 
-        logger.debug(f"Performing non-strict search on persons by search string {search}")
+        logger.debug(f'Performing non-strict search on persons by search string {search}')
         query = {
-            "multi_match": {
-                "query": search,
-                "fuzziness": "auto",
-                "fields": ["full_name"]
+            'multi_match': {
+                'query': search,
+                'fuzziness': 'auto',
+                'fields': ['full_name']
             }
         }
 

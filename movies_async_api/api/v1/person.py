@@ -19,7 +19,7 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
-@router.get("/{person_id}/", response_model=PersonWithMovies)
+@router.get('/{person_id}/', response_model=PersonWithMovies)
 async def person_details(
         person_id: UUID,
         page: int = Query(1, ge=1, alias="page[number]"),
@@ -29,7 +29,7 @@ async def person_details(
 ) -> PersonWithMovies:
     person = await person_service.get_person(person_id)
     if not person:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="person not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='person not found')
 
     related_films_filter = {
         FilterBy.WRITER: str(person_id),
@@ -78,10 +78,10 @@ async def all_persons(
     return [ResponsePerson(uuid=p.id, full_name=p.full_name) for p in persons]
 
 
-@router.get("/search", response_model=List[ResponsePerson])
+@router.get('/search', response_model=List[ResponsePerson])
 async def search(
-        page: int = Query(1, ge=1, alias="page[number]"),
-        per_page: int = Query(DEFAULT_PER_PAGE, alias="page[size]"),
+        page: int = Query(1, ge=1, alias='page[number]'),
+        per_page: int = Query(DEFAULT_PER_PAGE, alias='page[size]'),
         query: str = Query(..., min_length=1),
         person_service: PersonView = Depends(get_person_service)
 ) -> List[ResponsePerson]:

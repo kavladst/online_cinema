@@ -20,10 +20,10 @@ services:
     depends_on:
       - elastic
       - redis
-    restart: always
     environment:
       ELASTIC_URL: "http://elastic:9200"
       REDIS_HOST: redis
+      AUTH_SECRET_KEY: "cAtwa1kkEy"
     ports:
       - 80:8000
 
@@ -33,10 +33,11 @@ services:
       ELASTIC_HOST: elastic
       REDIS_HOST: redis
       API_URL: "http://movies_async_api:8000/"
+      AUTH_SECRET_KEY: "cAtwa1kkEy"
     entrypoint: >
       sh -c "pip install -r tests/functional/requirements.txt
       && python3 tests/functional/utils/wait_for_es.py
       && python3 tests/functional/utils/wait_for_redis.py
-      && pytest tests/functional/src"
+      && pytest --showlocals tests/functional/src/test_film.py"
     depends_on:
       - movies_async_api

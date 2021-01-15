@@ -15,15 +15,16 @@ class Film(BaseEntity):
     actors: Optional[List[Dict]]
     writers: Optional[List[Dict]]
     directors: Optional[List[Dict]]
+    age_limit: Optional[bool]
 
 
 class SortBy(Enum):
-    TITLE = "title"
-    IMDB_RATING = "imdb_rating"
+    TITLE = 'title'
+    IMDB_RATING = 'imdb_rating'
 
 
 class FilterBy(Enum):
-    GENRE = "genre"
-    ACTOR = "actor"
-    WRITER = "writer"
-    DIRECTOR = "director"
+    GENRE = 'genre'
+    ACTOR = 'actor'
+    WRITER = 'writer'
+    DIRECTOR = 'director'

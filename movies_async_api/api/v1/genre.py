@@ -15,17 +15,17 @@ from .common_response_models import ShortFilm, GenreWithMovies, ResponseGenre
 router = APIRouter()
 
 
-@router.get("/{genre_id}", response_model=GenreWithMovies)
+@router.get('/{genre_id}', response_model=GenreWithMovies)
 async def genre_info(
         genre_id: UUID,
-        page: int = Query(1, ge=1, alias="page[number]"),
-        per_page: int = Query(DEFAULT_PER_PAGE, alias="page[size]"),
+        page: int = Query(1, ge=1, alias='page[number]'),
+        per_page: int = Query(DEFAULT_PER_PAGE, alias='page[size]'),
         genre_service: GenreView = Depends(get_genre_service),
         films_service: FilmView = Depends(get_films_service)
 ) -> GenreWithMovies:
     genre = await genre_service.get_genre(genre_id)
     if not genre:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="genre not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='genre not found')
 
     related_films_filter = {FilterBy.GENRE: str(genre_id)}
     related_films = await films_service.get_films(
@@ -40,17 +40,16 @@ async def genre_info(
     return GenreWithMovies(uuid=genre.id, name=genre.name, films=short_movies)
 
 
-@router.get("/", response_model=List[ResponseGenre])
+@router.get('/', response_model=List[ResponseGenre])
 async def all_genres(
-        page: int = Query(1, ge=1, alias="page[number]"),
-        per_page: int = Query(DEFAULT_PER_PAGE, alias="page[size]"),
-        sort_order: SortOrder = SortOrder.ASC,
+        page: int = Query(1, ge=1, alias='page[number]'),
+        per_page: int = Query(DEFAULT_PER_PAGE, alias='page[size]'),
         genre_service: GenreView = Depends(get_genre_service)
 ) -> List[ResponseGenre]:
     genres = await genre_service.get_genres(
         page=page,
         per_page=per_page,
-        sort_order=sort_order,
+        sort_order=SortOrder.ASC,
         sort_by=SortBy.NAME
     )
     return [ResponseGenre(uuid=g.id, name=g.name) for g in genres]
